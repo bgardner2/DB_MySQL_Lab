@@ -46,9 +46,9 @@ public class DB_MySQL implements DBAccessor {
         query.append("SELECT ")
                 .append(columns)
                 .append(" FROM ")
-                .append(tableName)
-                .append(" ORDERBY ")
-                .append(sortOrder);
+                .append(tableName);
+//                .append(" ORDERBY ")
+//                .append(sortOrder);
         try {
             statement = conn.createStatement();
 
@@ -57,7 +57,7 @@ public class DB_MySQL implements DBAccessor {
 
             while (results.next()) {
                 record = new HashMap();
-                for (int i = 1; i < metaData.getColumnCount(); i++) {
+                for (int i = 1; i <=metaData.getColumnCount(); i++) {
                     record.put(metaData.getColumnName(i), results.getObject(i));
                 }
                 records.add(record);
@@ -93,6 +93,8 @@ public class DB_MySQL implements DBAccessor {
 
     public static void main(String[] args) {
         DB_MySQL my = new DB_MySQL();
+        List<String> columns = new ArrayList<String>();
+        columns.add("item_id");
         try {
             my.openConnection("jdbc:mysql://localhost:3306/restaurant", "root", "");
         } catch (SQLException ex) {
@@ -101,8 +103,10 @@ public class DB_MySQL implements DBAccessor {
         
         List<Map> records = my.findRecords("menu", null, true);
         Set<String> keys = records.get(1).keySet();
-        for(String s : keys){
-            System.out.println(s);
+        for(Map m : records){
+            System.out.print(m.get("item_id") + "\t");
+            System.out.print(m.get("item_name") + "\t");
+            System.out.println(m.get("item_price"));
             
         }
         

@@ -18,7 +18,7 @@ public interface DBAccessor {
     
     public void openConnection(String URL, String username, String password) throws SQLException;
     
-    public List<Map> findRecords(String tableName, List<String> columnNames, boolean sortAsc);
+    public List<Map> findRecords(String tableName, List<String> columnNames);
     
     public void closeConnection();
 }

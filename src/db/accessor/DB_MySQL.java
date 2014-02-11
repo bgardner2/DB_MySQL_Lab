@@ -33,8 +33,8 @@ public class DB_MySQL implements DBAccessor {
      * @return
      */
     @Override
-    public List<Map> findRecords(String tableName, List<String> columnNames, boolean sortAsc) {
-        String sortOrder = (sortAsc) ? " ASC " : " DESC ";
+    public List<Map> findRecords(String tableName, List<String> columnNames) {
+        
         String columns = (columnNames == null) ? " * " : getColumnsFromList(columnNames);
         Statement statement = null;
         ResultSet results = null;
@@ -47,8 +47,6 @@ public class DB_MySQL implements DBAccessor {
                 .append(columns)
                 .append(" FROM ")
                 .append(tableName);
-//                .append(" ORDERBY ")
-//                .append(sortOrder);
         try {
             statement = conn.createStatement();
 
@@ -83,7 +81,7 @@ public class DB_MySQL implements DBAccessor {
 
         columns.substring(0, columns.length() - 1);
 
-        return columns.toString();
+        return columns.substring(0, columns.length() - 1);
     }
 
     @Override
@@ -93,16 +91,15 @@ public class DB_MySQL implements DBAccessor {
 
     public static void main(String[] args) {
         DB_MySQL my = new DB_MySQL();
-        List<String> columns = new ArrayList<String>();
-        columns.add("item_id");
+       
         try {
             my.openConnection("jdbc:mysql://localhost:3306/restaurant", "root", "");
         } catch (SQLException ex) {
             Logger.getLogger(DB_MySQL.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        List<Map> records = my.findRecords("menu", null, true);
-        Set<String> keys = records.get(1).keySet();
+        List<Map> records = my.findRecords("menu", null);
+        
         for(Map m : records){
             System.out.print(m.get("item_id") + "\t");
             System.out.print(m.get("item_name") + "\t");
